@@ -39,22 +39,24 @@ def rewrite_as_linear_combination(vector, set_vectors):
 
 def plot_funct_and_linear_combination(vec, set_vectors, coefficients):
     x_vals = np.linspace(-np.pi, np.pi, 400)
-    y_original = [vec(x_val) for x_val in x_vals]
-
-    plt.plot(x_vals, y_original, label='Original function x^3', color='black')
+    y_original = np.array([float(vec(x_val).evalf()) for x_val in x_vals])
 
     y_combination = np.zeros_like(x_vals, dtype=float)
-    for i in range(len(coefficients)):
-        y_combination += coefficients[i] * np.array([float(set_vectors[i](x_val).evalf()) for x_val in x_vals], dtype=float)
+    for i in range(len(set_vectors)):
+        y_component = np.array([float(set_vectors[i](x_val).evalf()) for x_val in x_vals])
+        y_combination += float(coefficients[i]) * y_component
 
-    plt.plot(x_vals, y_combination, label='Linear combination', color='red')
-
+    plt.figure(figsize=(8, 5))
+    plt.plot(x_vals, y_original, label='Original function $x^3$', color='black', linestyle='dashed')
+    plt.plot(x_vals, y_combination, label='Linear combination', color='red', alpha=0.7)
+    
     plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
     plt.grid(True)
     plt.title('Original function and its Linear Combination Approximation')
     plt.show()
+
 
 def main():
     x = sp.Symbol('x')
